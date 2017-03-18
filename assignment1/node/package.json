@@ -1,12 +1,13 @@
 {
   "name": "full-stack-test-assignment1",
   "version": "0.0.1",
-  "description": "",
+  "description": "Port old PHP code to Node.JS",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon server.js",
     "start": "node server.js"
   },
-  "author": "",
+  "author": "tomasfrancisco",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
