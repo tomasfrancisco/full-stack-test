@@ -1,14 +1,20 @@
 {
-	"name": "full-stack-test-assignment1",
-	"version": "0.0.1",
-	"main": "index.js",
-	"scripts": {
-		"start": "node ."
-	},
-	"dependencies": {
-		// Your dependencies here
-	},
-	"devDependencies": {
-		// Your dev dependencies here	
-	}
+  "name": "full-stack-test-assignment1",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "bookshelf": "^0.10.3",
+    "express": "^4.15.2",
+    "knex": "^0.12.8",
+    "morgan": "^1.8.1",
+    "sqlite3": "^3.1.8",
+    "winston": "^2.3.1"
+  }
 }
