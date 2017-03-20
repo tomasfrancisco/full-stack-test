@@ -6,11 +6,17 @@ var Venue          = require('../../models/Venue'),
 
 var middleware = {
   getAll: (req, res) => {
-    return Venue.findAll({
-      limit: req.query['$limit'],
-      offset: req.query['$offset'],
-      order: SortQuery.getList(req.query['$sort'])
-    }).then(
+    var modelPromise = Venue;
+    if(req.query['$count']) {
+      modelPromise = modelPromise.count();
+    } else {
+      modelPromise = modelPromise.findAll({
+        limit: req.query['$limit'],
+        offset: req.query['$offset'],
+        order: SortQuery.getList(req.query['$sort'])
+      });
+    }
+    return modelPromise.then(
       (venues) => res.json(venues)
     ).catch((err) => ErrorGenerator.generate(500, err.message, res));
   },

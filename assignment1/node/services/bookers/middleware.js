@@ -6,15 +6,21 @@ var Booker         = require('../../models/Booker'),
 
 var middleware = {
   getAll: (req, res) => {
-    return Booker.findAll({
-      limit: req.query['$limit'],
-      offset: req.query['$offset'],
-      include: {
-        model : User,
-	      required : true
-      },
-      order: SortQuery.getList(req.query['$sort'])
-    }).then(
+    var modelPromise = Booker;
+    if(req.query['$count']) {
+      modelPromise = modelPromise.count();
+    } else {
+      modelPromise = modelPromise.findAll({
+        limit: req.query['$limit'],
+        offset: req.query['$offset'],
+        include: {
+          model : User,
+  	      required : true
+        },
+        order: SortQuery.getList(req.query['$sort'])
+      });
+    }
+    return modelPromise.then(
       (bookers) => res.json(bookers)
     ).catch((err) => ErrorGenerator.generate(500, err.message, res));;
   },

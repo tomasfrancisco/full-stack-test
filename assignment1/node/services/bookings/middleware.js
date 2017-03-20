@@ -13,31 +13,38 @@ var Booking        = require('../../models/Booking'),
 
 var middleware = {
   getAll: (req, res) => {
-    return Booking.findAll({
-      limit: req.query['$limit'],
-      offset: req.query['$offset'],
-      include: [{
-          model: Booker,
-          as: 'booker',
-          include: {
-            model: User
-          }
-        }, {
-          model: BookingItem,
-          as: 'items',
-          include: {
-            model: Item,
-            as: 'item',
-            include: {
-              model: Space,
-              as: 'space'
+    var modelPromise = Booking;
+    if(req.query['$count']) {
+      modelPromise = modelPromise.count();
+    } else {
+      modelPromise = modelPromise.findAll({
+        limit: req.query['$limit'],
+        offset: req.query['$offset'],
+        include: [{
+            model: Booker,
+            as: 'booker',
+            include: {
+              model: User
             }
-          }
-        },
-        // TODO: Missing Venue fetch
-      ],
-      order: SortQuery.getList(req.query['$sort'])
-    }).then(
+          }, {
+            model: BookingItem,
+            as: 'items',
+            include: {
+              model: Item,
+              as: 'item',
+              include: {
+                model: Space,
+                as: 'space'
+              }
+            }
+          },
+          // TODO: Missing Venue fetch
+        ],
+        order: SortQuery.getList(req.query['$sort'])
+      });
+    }
+
+    return modelPromise.then(
       (bookings) => res.json(bookings)
     ).catch((err) => ErrorGenerator.generate(500, err.message, res));;
   },
