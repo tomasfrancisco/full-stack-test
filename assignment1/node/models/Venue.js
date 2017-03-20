@@ -1,9 +1,16 @@
-var db   = require('../db'),
-    Item = require('./Item');
+var db        = require('../db'),
+    Sequelize = require('sequelize');
 
-var Venue = db.Model.extend({
-  tableName: 'venues',
-  items: function() { return this.hasMany(Item) }
-});
+var Venue = db.define('Venue', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: Sequelize.STRING(255),
+    allowNull: false
+  }
+}, { });
 
 module.exports = Venue;

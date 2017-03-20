@@ -1,5 +1,6 @@
-var config    = require('./config.js').db,
-    knex      = require('knex')(config),
-    bookshelf = require('bookshelf')(knex);
+var Sequelize = require('sequelize'),
+    config    = require('./config');
 
-module.exports = bookshelf;
+var db = new Sequelize('database', 'username', 'password', config.db);
+
+module.exports = db;

@@ -1,9 +1,28 @@
-var db     = require('../db'),
-    Booker = require('./Booker');
+var db        = require('../db'),
+    Sequelize = require('sequelize');
 
-var User = db.Model.extend({
-  tableName: 'users',
-  booker: function() { return this.hasOne(Booker) }
-});
+var User = db.define('user', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  first_name: {
+    type: Sequelize.STRING(255),
+    allowNull: false
+  },
+  last_name: {
+    type: Sequelize.STRING(255),
+    allowNull: false
+  },
+  registered: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  email: {
+    type: Sequelize.STRING(255),
+    allowNull: false
+  }
+}, { });
 
 module.exports = User;

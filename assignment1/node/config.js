@@ -2,11 +2,13 @@ const path = require('path');
 
 var config = {
   db: {
-    client: 'sqlite3',
-    connection: {
-      filename: path.join(__dirname, 'sqlite.db')
+    host: 'localhost',
+    dialect: 'sqlite',
+    define: {
+      timestamps: false,
+      underscored: true
     },
-    useNullAsDefault: true
+    storage: './database.sqlite'
   }
 };
 

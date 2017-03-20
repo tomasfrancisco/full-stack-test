@@ -1,9 +1,16 @@
-var db     = require('../db'),
-    Item = require('./Item');
+var db        = require('../db'),
+    Sequelize = require('sequelize');
 
-var Space = db.Model.extend({
-  tableName: 'spaces',
-  item: function() { return this.belongsTo(Item) }
-});
+var Space = db.define('Space', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  hour_price: {
+    type: Sequelize.REAL,
+    allowNull: false
+  }
+}, { });
 
 module.exports = Space;

@@ -1,13 +1,21 @@
-var db      = require('../db'),
-    Venue   = require('./Venue'),
-    Space   = require('./Space'),
-    Product = require('./Product');
+var db        = require('../db'),
+    Sequelize = require('sequelize'),
+    Venue     = require('./Venue'),
+    Space     = require('./Space');
 
-var Item = db.Model.extend({
-  tableName: 'items',
-  venue: function() { return this.belongsTo(Venue) },
-  space: function() { return this.hasOne(Space) },
-  product: function() { return this.hasOne(Product) }
-});
+var Item = db.define('Item', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name: {
+    type: Sequelize.STRING(255),
+    allowNull: false
+  }
+}, { });
+
+Item.belongsTo(Venue, { as: 'venue', foreignKey: 'venue_id' });
+Item.hasOne(Space, { as: 'space', foreignKey: 'item_id' });
 
 module.exports = Item;

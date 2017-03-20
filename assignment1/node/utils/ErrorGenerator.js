@@ -1,8 +1,8 @@
 module.exports = {
-  generate: (code, message) => {
+  generate: (code, message, res) => {
     var error = new Error(JSON.stringify(message));
-    error.statusCode = code;
+    res.status(code).send(message).end();
 
-    return error;
+    throw error;
   }
 };
