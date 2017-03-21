@@ -1,6 +1,7 @@
-var db        = require('../db'),
-    Sequelize = require('sequelize'),
-    Item      = require('./Item');
+var db          = require('../db'),
+    Sequelize   = require('sequelize'),
+    Item        = require('./Item'),
+    BookingItem = require('./BookingItem');
 
 var BookingItem = db.define('booking_item', {
   id: {
@@ -29,5 +30,6 @@ var BookingItem = db.define('booking_item', {
 }, { });
 
 BookingItem.belongsTo(Item, { as: 'item', foreignKey: { name: 'item_id', allowNull: false } });
+BookingItem.belongsTo(BookingItem, { as: 'booking_item', foreignKey: { name: 'booking_id', allowNull: false } });
 
 module.exports = BookingItem;
