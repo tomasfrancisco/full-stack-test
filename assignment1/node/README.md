@@ -1,29 +1,13 @@
-# Deskbookers Backend Assignment
+# Deskbookers Backend Assignment - API Docs
 
-## API Docs
+Count results | Pagination | Sort
+--- | --- | ---
+`$count=<boolean>` | `$limit=<integer>` & `$offset=<integer>` |`$sort=<column>:<option>`
+`true` (default: `false`)|  | `a`for ASC or `d` for DESC
 
-### Booker
+## Booker
 
-#### Available queries
-
-##### Count results
-`$count=<boolean>`
-
-##### Pagination
-
-`$limit=<integer>`
-
-`$offset=<integer>`
-
-##### Sort
-`$sort=<column>:<d|a>`
-
-* `d`: DESC
-* `a`: ASC
-
-
-
-##### /booker(s)
+### /booker(s)
 ```
 [
   {
@@ -54,7 +38,7 @@
 ]
 ```
 
-##### /booker(s)/:id
+### /booker(s)/:id
 ```
 {
   "id": "10001",
@@ -70,7 +54,9 @@
 }
 ```
 
-### /venue(s)(/:id)
+## Venue
+
+### /venue(s)
 
 ```
 [
@@ -86,7 +72,18 @@
 ]
 ```
 
-### /booking(s)(/:id)
+### /venue(s)/:id
+
+```
+{
+  "id": "10003",
+  "name": "Venue10003"
+}
+```
+
+## Booking
+
+### /booking(s)
 
 ```
 [
@@ -135,4 +132,52 @@
   },
   ...
 ]
+```
+
+### /booking(s)/:id
+
+```
+{
+  "id": "10000",
+  "booker_id": "10501",
+  "created": "1376127677",
+  "booker": {
+    "id": null,
+    "user_id": null,
+    "created": null,
+    "user": {
+      "id": null,
+      "first_name": null,
+      "last_name": null,
+      "registered": null,
+      "email": null
+    }
+  },
+  "items": [
+    {
+      "id": "10000",
+      "booking_id": "10000",
+      "item_id": "13670",
+      "quantity": "1",
+      "locked_piece_price": "10.0",
+      "locked_total_price": "10.0",
+      "start_timestamp": "1376308800",
+      "end_timestamp": "1376312400",
+      "item": {
+        "id": "13670",
+        "venue_id": "10594",
+        "name": "Space13274",
+        "space": {
+          "id": "13274",
+          "item_id": "13670",
+          "hour_price": "12.5"
+        }
+      }
+    }
+  ],
+  "venue": {
+    "id": "10594",
+    "name": "Venue10594"
+  }
+}
 ```
