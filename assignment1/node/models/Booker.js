@@ -2,7 +2,7 @@ var db        = require('../db'),
     Sequelize = require('sequelize'),
     User      = require('./User');
 
-var Booker = db.define('Booker', {
+var Booker = db.define('booker', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

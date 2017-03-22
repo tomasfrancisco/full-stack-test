@@ -1,7 +1,7 @@
 var db        = require('../db'),
     Sequelize = require('sequelize');
-    
-var Venue = db.define('Venue', {
+
+var Venue = db.define('venue', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -12,6 +12,5 @@ var Venue = db.define('Venue', {
     allowNull: false
   }
 }, { });
-
 
 module.exports = Venue;

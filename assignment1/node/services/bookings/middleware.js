@@ -11,15 +11,72 @@ var Booking        = require('../../models/Booking'),
     Sequelize      = require('sequelize'),
     _              = require('lodash');
 
-var mapVenueIntoBooking = (booking) => {
+var fixVenueMapping = (booking) => {
   var bookingJSON = booking.toJSON();
-  if(bookingJSON.items) {
-    if(bookingJSON.items[0].item && bookingJSON.items[0].item.venue) {
-      bookingJSON.venue = bookingJSON.items[0].item.venue;
-      delete bookingJSON.items[0].item.venue;
-    }
+
+  bookingJSON.venue = null;
+  
+  if(bookingJSON.venue_id || bookingJSON.venue_name) {
+    bookingJSON.venue = {
+      id: bookingJSON.venue_id,
+      name: bookingJSON.venue_name
+    };
   }
+
+  delete bookingJSON.venue_id;
+  delete bookingJSON.venue_name;
+
   return bookingJSON;
+};
+
+var bookingQuery = (options) => {
+  var query = {
+    subQuery: false,
+    attributes: {
+      include: [
+        [ Sequelize.col('items.item.venue.id'), 'venue_id' ],
+        [ Sequelize.col('items.item.venue.name'), 'venue_name' ],
+      ]
+    },
+    include: [{
+      model: Booker,
+      as: 'booker',
+      required: false,
+      include: {
+        model: User
+      }
+    }, {
+      model: BookingItem,
+      as: 'items',
+      required: false,
+      include: {
+        model: Item,
+        as: 'item',
+        required: false,
+        include: [{
+          model: Space,
+          as: 'space'
+        }, {
+          model: Venue,
+          as: 'venue',
+          required: false,
+          attributes: {
+            exclude: [ 'id', 'name' ]
+          },
+          where: {
+            id: Sequelize.col('venue_id')
+          }
+        }]
+      }
+    }]
+  };
+
+  query.limit = options.limit ? options.limit : null;
+  query.offset = options.offset ? options.offset : null;
+  query.where = options.id ? { id: options.id } : null;
+  query.order = options.sortQuery ? SortQuery.getList(options.sortQuery) : null;
+
+  return query;
 };
 
 var middleware = {
@@ -28,37 +85,14 @@ var middleware = {
     if(req.query['$count']) {
       modelPromise = modelPromise.count();
     } else {
-      modelPromise = modelPromise.findAll({
-        limit: req.query['$limit'],
-        offset: req.query['$offset'],
-        include: [{
-            model: Booker,
-            as: 'booker',
-            include: {
-              model: User
-            }
-          }, {
-            model: BookingItem,
-            as: 'items',
-            include: {
-              model: Item,
-              as: 'item',
-              include: [{
-                model: Space,
-                as: 'space'
-              }, {
-                model: Venue,
-                as: 'venue',
-                where: {
-                  id: Sequelize.col('venue_id')
-                }
-              }]
-            }
-          }
-        ],
-        order: SortQuery.getList(req.query['$sort'])
-      }).then(
-        (bookings) => _.map(bookings, (booking) => mapVenueIntoBooking(booking))
+      modelPromise = modelPromise.findAll(
+        bookingQuery({
+          limit: req.query['$limit'],
+          offset: req.query['$offset'],
+          sortQuery: req.query['$sort']
+        })
+      ).then(
+        (bookings) => _.map(bookings, (booking) => fixVenueMapping(booking))
       );
     }
 
@@ -68,32 +102,12 @@ var middleware = {
   },
 
   get: (req, res) => {
-    return Booking.find({
-      where: { id: req.params.id },
-      include: [{
-        model: Booker,
-        as: 'booker',
-	      required: true
-      }, {
-        model: BookingItem,
-        as: 'items',
-        include: {
-          model: Item,
-          as: 'item',
-          include: [{
-            model: Space,
-            as: 'space'
-          }, {
-            model: Venue,
-            as: 'venue',
-            where: {
-              id: Sequelize.col('venue_id')
-            }
-          }]
-        }
-      }]
-    }).then(
-      (booking) => mapVenueIntoBooking(booking)
+    return Booking.find(
+      bookingQuery({
+        id: req.params.id
+      })
+    ).then(
+      (booking) => fixVenueMapping(booking)
     ).then(
       (booking) => res.json(booking)
     ).catch((err) => ErrorGenerator.generate(500, err.message, res));

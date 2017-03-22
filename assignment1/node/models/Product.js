@@ -2,7 +2,7 @@ var db        = require('../db'),
     Sequelize = require('sequelize'),
     Item      = require('./Item');
 
-var Product = db.define('Product', {
+var Product = db.define('product', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

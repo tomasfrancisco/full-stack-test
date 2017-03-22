@@ -3,7 +3,7 @@ var db        = require('../db'),
     Venue     = require('./Venue'),
     Space     = require('./Space');
 
-var Item = db.define('Item', {
+var Item = db.define('item', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
