@@ -1,5 +1,13 @@
 # Deskbookers Backend Assignment - API Docs
 
+# Install & Run
+
+`npm install`
+
+`npm start`
+
+## URL Queries
+
 Count results | Pagination | Sort
 --- | --- | ---
 `$count=<boolean>` | `$limit=<integer>` & `$offset=<integer>` |`$sort=<column>:<option>`
